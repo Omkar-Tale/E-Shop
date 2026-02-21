@@ -19,5 +19,4 @@ export const zSchema = z.object({
     .regex(/[a-z]/, "Must contain at least one lowercase letter")
     .regex(/[0-9]/, "Must contain at least one number")
     .regex(/[^A-Za-z0-9]/, "Must contain at least one special character")
-
 });

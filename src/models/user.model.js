@@ -65,5 +65,5 @@ userSchema.methods({
     }
 })
 
-export const userModule = mongoose.model("user", userSchema)
+export const userModel = mongoose.model("user", userSchema)
 

@@ -2,11 +2,16 @@ import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    name:{
+    role:{
         type: String,
         enum: ["user", "admin"],
         default: "user",
         required: true
+    },
+    name:{
+        type: String,
+        required: true,
+        trim: true
     },
     email:{
         type: String,
@@ -21,11 +26,11 @@ const userSchema = new mongoose.Schema({
     avatar: {
         url: {
             type: String,
-            trim: ture
+            trim: true
         },
         public_id: {
             type: String,
-            trim: ture
+            trim: true
         }
     },
     isEmailVerified: {
@@ -51,19 +56,18 @@ const userSchema = new mongoose.Schema({
 
 // using hooks we wil setup hashing and password compares logic\
 // using save and pre after modifying the password it will hash
-userSchema.pre("save", async(next)=>{
-    if(!this.isModified("password")) return next();
+userSchema.pre("save", async function(){
+    if(!this.isModified("password")) return
     this.password = await bcrypt.hash(this.password, 10);
-    next();
 })
 
 // using methods we can define the fuctions 
-userSchema.methods({
+userSchema.methods = {
     // using for compares passwore
-    comparePassword: async(password)=>{
+    comparePassword: async function(password){
         return await bcrypt.compare(password, this.password)
     }
-})
+}
 
-export const userModel = mongoose.model("user", userSchema)
+export const userModel = mongoose.models.User ||  mongoose.model("User", userSchema);
 

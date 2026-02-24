@@ -22,6 +22,7 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
 import { WEBSITE_LOGIN } from "@/routes/WebsiteRoutes";
+import axios from "axios";
 
 const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
@@ -53,10 +54,20 @@ const RegisterPage = () => {
     },
   });
 
-  function handleLoginSubmit(data) {
-    console.log(data);
-    // Simulate loading or API call here
-    // setLoading(true);
+  async function handleLoginSubmit(datas) {
+    try {
+      setLoading(true);
+      const {data: responseR} = await axios.post("/api/auth/register", datas)
+      if(!responseR.success){
+        throw new Error(responseR.message)
+      }
+      form.reset();
+      alert(responseR.message)
+    } catch (error) {
+      alert(error.message)
+    } finally{ 
+      setLoading(false)
+    }
   }
 
   return (
@@ -201,7 +212,7 @@ const RegisterPage = () => {
               <div className="flex justify-center">
                 <ButtonLoader
                   type="submit"
-                  text={!loading ? "Submit" : "Submitting..."}
+                  text={!loading ? "Submit" : "Submitting"}
                   // Removed onClick={handleLoginSubmit} because form.handleSubmit handles it
                   loading={loading}
                   className="cursor-pointer text-md py-4 w-full"
